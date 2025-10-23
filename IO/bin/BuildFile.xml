@@ -1,0 +1,8 @@
+<bin name="podioFileUtil" file="PodioFileUtil.cpp">
+        <use name="boost_program_options"/>
+        <use name="json" />
+        <use name="python3" />
+        <flags LDFLAGS="-lpodioIO"/>
+        <flags LDFLAGS="-lpodio"/>
+        <flags LDFLAGS="-ledm4hep"/>
+</bin>
