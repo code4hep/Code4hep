@@ -1,0 +1,7 @@
+<flags LDFLAGS="-lpodio"/>
+<flags LDFLAGS="-ledm4hep"/>
+<use name="FWCore/Common"/>
+<use name="python3"/>
+<export>
+  <lib name="1"/>
+</export>
