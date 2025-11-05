@@ -2,7 +2,6 @@
         <use name="boost_program_options"/>
         <use name="json" />
         <use name="python3" />
-        <flags LDFLAGS="-lpodioIO"/>
-        <flags LDFLAGS="-lpodio"/>
-        <flags LDFLAGS="-ledm4hep"/>
+        <use name="podio" />
+        <use name="edm4hep" />
 </bin>
