@@ -1,0 +1,7 @@
+<use name="FWCore/Framework"/>
+<use name="podio"/>
+<use name="edm4hep" />
+<use name="python3" />
+<library file="*.cc" name="Code4hepIOPlugins">
+  <flags EDM_PLUGIN="1"/>
+</library>
