@@ -2,6 +2,12 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process("TEST")
 
+process.load("FWCore.MessageService.MessageLogger_cfi")
+process.MessageLogger.cout = cms.untracked.PSet(
+    threshold = cms.untracked.string('INFO'),
+    enable = cms.untracked.bool(True)
+)
+
 process.Tracer = cms.Service("Tracer")
 
 process.source = cms.Source("PodioSource",
@@ -33,4 +39,9 @@ process.test = RunLumiEventAnalyzer(
     expectedEndingIndex = 30
 )
 
-process.e = cms.EndPath(process.test)
+process.testAnalyzer = cms.EDAnalyzer("c4h::TestTracksAnalyzer",
+    eventHeaders = cms.untracked.InputTag("EventHeader"),
+    tracks = cms.untracked.InputTag("TrackCollection")
+)
+
+process.e = cms.EndPath(process.testAnalyzer + process.test)
