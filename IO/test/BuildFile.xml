@@ -1,0 +1,6 @@
+<bin name="testCode4hepIOCatch2" file="test_catch2_*.cc">
+  <use name="python3" />
+  <use name="podio"/>
+  <use name="edm4hep"/>
+<use name="catch2"/>
+</bin>
