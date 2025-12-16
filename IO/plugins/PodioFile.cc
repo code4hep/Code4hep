@@ -3,21 +3,28 @@
 #include <iomanip>
 
 #include "edm4hep/EventHeaderCollection.h"
+#include "podio/CollectionBase.h"
 
+#include "fillProductRegistry.h"
+#include "putOnReadForAllProducts.h"
 #include "PodioFile.h"
 
 #include "DataFormats/Provenance/interface/EventAuxiliary.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 #include "DataFormats/Provenance/interface/HardwareResourcesDescription.h"
+#include "DataFormats/Provenance/interface/LuminosityBlockAuxiliary.h"
 #include "DataFormats/Provenance/interface/ProcessConfiguration.h"
 #include "DataFormats/Provenance/interface/ProcessHistory.h"
+#include "DataFormats/Provenance/interface/RunAuxiliary.h"
 
 #include "FWCore/Framework/interface/EventPrincipal.h"
 #include "FWCore/Framework/interface/LuminosityBlockPrincipal.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/RunPrincipal.h"
+#include "FWCore/Utilities/interface/EDMException.h"
 #include "FWCore/Utilities/interface/TimeOfDay.h"
+#include "DataFormats/Provenance/interface/Timestamp.h"
 
 namespace c4h {
 
@@ -34,14 +41,26 @@ namespace c4h {
     }
     numberOfEvents_ = podioReader_->getEntries("events");
 
+    std::string const processNameForInputProducts = "PODIO";
+
     ParameterSet processParameterSet;
     processParameterSet.registerIt();
-    ProcessConfiguration processConfiguration("PODIO", processParameterSet.id(), "", HardwareResourcesDescription());
+    ProcessConfiguration processConfiguration(
+        processNameForInputProducts, processParameterSet.id(), "", HardwareResourcesDescription());
     ProcessHistory processHistory;
     processHistory.push_back(processConfiguration);
     processHistory.setProcessHistoryID();
     processHistoryRegistry.registerProcessHistory(processHistory);
     processHistoryID_ = processHistory.id();
+
+    // Fill the ProductRegistry with ProductDescriptions
+    // from the collections available in the first event
+    std::size_t eventIndex = 0;
+    frame_ = podioReader_->readFrame("events", eventIndex);
+    eventIndexOfOpenFrame_ = eventIndex;
+
+    auto productRegistry = c4h::fillProductRegistry(frame_, processNameForInputProducts);
+    productRegistry_.reset(productRegistry.release());
   }
 
   InputSource::ItemType PodioFile::getNextItemType() {
@@ -53,15 +72,18 @@ namespace c4h {
     }
     if (nextItemType_ == InputSource::ItemType::IsEvent || nextItemType_ == InputSource::ItemType::IsInvalid) {
       if (nextItemType_ != InputSource::ItemType::IsInvalid) {
-        ++nextEventIndex;
+        ++nextEventIndex_;
       }
 
       // Already processed the last event in the file
-      if (nextEventIndex >= numberOfEvents_) {
+      if (nextEventIndex_ >= numberOfEvents_) {
         return InputSource::ItemType::IsFile;
       }
 
-      frame_ = podioReader_->readFrame("events", nextEventIndex);
+      if (nextEventIndex_ != eventIndexOfOpenFrame_) {
+        frame_ = podioReader_->readFrame("events", nextEventIndex_);
+        eventIndexOfOpenFrame_ = nextEventIndex_;
+      }
       auto const& eventHeaderCollection = frame_.get<edm4hep::EventHeaderCollection>("EventHeader");
       auto const& eventHeader = eventHeaderCollection.at(0);
       RunNumber_t run = eventHeader.getRunNumber();
@@ -131,6 +153,8 @@ namespace c4h {
 
     auto history = processHistoryRegistry.getMapped(processHistoryID_);
     eventPrincipal.fillEventPrincipal(eventAuxiliary, history);
+
+    putOnReadForAllProducts(frame_, *productRegistry_, eventPrincipal);
   }
 
   void PodioFile::logFileAction(char const* msg, std::string const& fileName) const {

@@ -63,6 +63,11 @@ namespace c4h {
     if (currentFileIter_ != inputFiles_.end()) {
       podioFile_ = std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate());
     }
+
+    std::vector<std::string> processOrder;
+    processingOrderMerge(processHistoryRegistry(), processOrder);
+
+    productRegistryUpdate().updateFromInput(podioFile_->productRegistry()->productList(), processOrder);
   }
 
   void PodioSource::fillDescriptions(ConfigurationDescriptions& descriptions) {
@@ -102,6 +107,14 @@ namespace c4h {
       ++currentFileIter_;
       podioFile_ = std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate());
     }
+
+    // make sure the new product registry is compatible with the main one
+    std::string const& mergeInfo =
+        productRegistryUpdate().merge(*podioFile_->productRegistry(), *currentFileIter_, ProductDescription::Strict);
+    if (!mergeInfo.empty()) {
+      throw Exception(errors::MismatchedInputFiles, "PodioSource::readFile_()") << mergeInfo;
+    }
+
     return std::make_shared<FileBlock>();
   }
 

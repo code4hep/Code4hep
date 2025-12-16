@@ -1,1 +1,50 @@
-<class name="edm::Wrapper<edm4hep::TrackCollection>"  persistent="false"/>
+<lcgdict>
+
+<class name="edm::Wrapper<edm4hep::CaloHitContributionCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::CalorimeterHitCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::ClusterCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::EventHeaderCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::GeneratorEventParametersCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::MCParticleCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::ParticleIDCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::RawCalorimeterHitCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::RawTimeSeriesCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::RecDqdxCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::ReconstructedParticleCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::SenseWireHitCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::SimCalorimeterHitCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::SimTrackerHitCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::TimeSeriesCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::TrackCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::TrackerHitPlaneCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::TrackerHit3DCollection>" persistent="false"/>
+<class name="edm::Wrapper<edm4hep::VertexCollection>" persistent="false"/>
+
+<class name="edm::Wrapper<podio::LinkCollection<edm4hep::CalorimeterHit,edm4hep::MCParticle>>" persistent="false"/>
+<class name="edm::Wrapper<podio::LinkCollection<edm4hep::CalorimeterHit,edm4hep::SimCalorimeterHit>>" persistent="false"/>
+<class name="edm::Wrapper<podio::LinkCollection<edm4hep::Cluster,edm4hep::MCParticle>>" persistent="false"/>
+<class name="edm::Wrapper<podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>>" persistent="false"/>
+<class name="edm::Wrapper<podio::LinkCollection<edm4hep::Track,edm4hep::MCParticle>>" persistent="false"/>
+<class name="edm::Wrapper<podio::LinkCollection<edm4hep::TrackerHit,edm4hep::SimTrackerHit>>" persistent="false"/>
+<class name="edm::Wrapper<podio::LinkCollection<edm4hep::Vertex,edm4hep::ReconstructedParticle>>" persistent="false"/>
+
+<class name="edm::Wrapper<podio::UserDataCollection<int32_t>>" persistent="false"/>
+<class name="edm::Wrapper<podio::UserDataCollection<float>>" persistent="false"/>
+
+<class name="podio::LinkCollection<edm4hep::CalorimeterHit,edm4hep::MCParticle>"/>
+<class name="podio::LinkCollection<edm4hep::CalorimeterHit,edm4hep::SimCalorimeterHit>"/>
+<class name="podio::LinkCollection<edm4hep::Cluster,edm4hep::MCParticle>"/>
+<class name="podio::LinkCollection<edm4hep::ReconstructedParticle,edm4hep::MCParticle>"/>
+<class name="podio::LinkCollection<edm4hep::Track,edm4hep::MCParticle>"/>
+<class name="podio::LinkCollection<edm4hep::TrackerHit,edm4hep::SimTrackerHit>"/>
+<class name="podio::LinkCollection<edm4hep::Vertex,edm4hep::ReconstructedParticle>"/>
+
+<class name="podio::LinkT<edm4hep::CalorimeterHit,edm4hep::MCParticle, false>"/>
+<class name="podio::LinkT<edm4hep::CalorimeterHit,edm4hep::SimCalorimeterHit, false>"/>
+<class name="podio::LinkT<edm4hep::Cluster,edm4hep::MCParticle, false>"/>
+<class name="podio::LinkT<edm4hep::ReconstructedParticle,edm4hep::MCParticle, false>"/>
+<class name="podio::LinkT<edm4hep::Track,edm4hep::MCParticle, false>"/>
+<class name="podio::LinkT<edm4hep::TrackerHit,edm4hep::SimTrackerHit, false>"/>
+<class name="podio::LinkT<edm4hep::Vertex,edm4hep::ReconstructedParticle, false>"/>
+
+</lcgdict>
