@@ -1,0 +1,6 @@
+<use name="FWCore/PluginManager"/>
+<use name="DataFormats/Common"/>
+<use name="podio"/>
+<export>
+  <lib name="1"/>
+</export>
