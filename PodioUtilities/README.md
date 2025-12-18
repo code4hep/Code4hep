@@ -53,7 +53,7 @@ The BuildFile.xml needs to declare the dependency on
 When specify this is a `library` to be built, one must also give a unique `name` for the library. Often the name is is just then name of the containing package with the extension `Plugin` added.
 
 #### example BuildFile.xml
-```
+```xml
 <use name="Code4hep/PodioUtilities"/>
 <use name="podio"/>
 <use name="edm4hep"/>
@@ -63,6 +63,14 @@ When specify this is a `library` to be built, one must also give a unique `name`
 </library>
 ```
 
+### Testing collection plugin
+
+You can use the program `c4hCheckCollection` to check that a collection has been properly registered. The program takes the name of the collection to check as its only required input. If any part of the registration is missing, the program will report a problem.
+
+```bash
+> c4hCheckCollection edm4hep::TrackCollection
+```
+
 ## Using the plugin
 
 To get access to the plugin, one must use the appropriate plugin factory: `CollectionWrapperConverterBaseFactory`.
@@ -70,9 +78,9 @@ To get access to the plugin, one must use the appropriate plugin factory: `Colle
 #include "Code4hep/PodioUtilities/interface/CollectionWrapperConverterBaseFactory.h"
 ...
 
-  auto factory = CollectionWrapperConverterBaseFactory::instance();
+  auto factory = CollectionWrapperConverterBaseFactory::get();
 
-  auto converter = factory.load("podio::TrackCollection");
+  auto converter = factory->create("podio::TrackCollection");
 ```
 
 For the available abilities of the returned `CollectionWrapperConverterBase` object see the header file `Code4hep/PodioUtilities/interface/CollectionWrapperConverterBase.h`.

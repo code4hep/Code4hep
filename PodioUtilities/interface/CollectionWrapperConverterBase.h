@@ -6,9 +6,7 @@
 #include <functional>
 #include <memory>
 
-namespace podio {
-  class CollectionBase;
-}
+#include "podio/CollectionBase.h"
 
 namespace edm {
   class WrapperBase;
@@ -27,6 +25,8 @@ namespace code4hep {
 
     //Internally the buffer will be requested which is a non-const interface call
     std::unique_ptr<podio::CollectionBase> copy(podio::CollectionBase&) const;
+
+    virtual std::unique_ptr<podio::CollectionBase> createEmpty() const = 0;
 
     using FromVectorToVector = std::function<void(void const*, void*)>;
 

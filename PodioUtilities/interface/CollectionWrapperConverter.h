@@ -35,6 +35,10 @@ namespace code4hep {
       return s_copiers;
     }
 
+    std::unique_ptr<podio::CollectionBase> createEmpty() const {
+      return std::make_unique<T>();
+    }
+
   private:
     CollectionWrapperConverterBase::FromVectorToVector copier(std::string_view iName) const final {
       auto itFound = copiers().find(iName);
