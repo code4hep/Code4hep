@@ -1,0 +1,4 @@
+<bin name="c4hCheckCollection" file="c4hCheckCollection.cc,">
+  <use name="boost_program_options"/>
+  <use name="Code4hep/PodioUtilities"/>
+</bin>
