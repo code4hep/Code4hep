@@ -40,15 +40,18 @@ namespace code4hep {
       readBufs->references->emplace_back(std::move(entry));
     }
 
-    assert(readBufs->vectorMembers != nullptr);
-    assert(writeBufs.vectorMembers != nullptr);
+    if (readBufs->vectorMembers != nullptr) {
+      assert(writeBufs.vectorMembers != nullptr);
 
-    assert(readBufs->vectorMembers->size() == writeBufs.vectorMembers->size());
-    for (size_t index = 0; index < writeBufs.vectorMembers->size(); ++index) {
-      assert((*writeBufs.vectorMembers)[index].first == (*(readBufs->vectorMembers))[index].first);
-      fromVectorToVector((*writeBufs.vectorMembers)[index].second,
-                         (*(readBufs->vectorMembers))[index].second,
-                         copier((*writeBufs.vectorMembers)[index].first));
+      assert(readBufs->vectorMembers->size() == writeBufs.vectorMembers->size());
+      for (size_t index = 0; index < writeBufs.vectorMembers->size(); ++index) {
+        assert((*writeBufs.vectorMembers)[index].first == (*(readBufs->vectorMembers))[index].first);
+        fromVectorToVector((*writeBufs.vectorMembers)[index].second,
+                           (*(readBufs->vectorMembers))[index].second,
+                           copier((*writeBufs.vectorMembers)[index].first));
+      }
+    } else {
+      assert(writeBufs.vectorMembers == nullptr or writeBufs.vectorMembers->empty());
     }
     auto newCol = readBufs->createCollection(*readBufs, iCollection.isSubsetCollection());
     newCol->prepareAfterRead();
