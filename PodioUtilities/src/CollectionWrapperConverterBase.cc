@@ -59,7 +59,8 @@ namespace code4hep {
 
   void CollectionWrapperConverterBase::throwMissingConverter(std::string_view iCollection,
                                                              std::string_view iContainedType) {
-    throw cms::Exception("MissingConverter") << "The collection '" << iCollection << "' contains type '" << iContainedType
-                                             << "'. The type '"<<iContainedType<<"' needs to be registered using the C4H_CONTAINED_CLASS macro.";
+    throw cms::Exception("MissingConverter")
+        << "The collection '" << iCollection << "' contains type '" << iContainedType << "'. The type '"
+        << iContainedType << "' needs to be registered using the C4H_CONTAINED_CLASS macro.";
   }
 }  // namespace code4hep
