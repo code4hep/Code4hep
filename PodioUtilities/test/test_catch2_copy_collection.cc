@@ -32,11 +32,9 @@ TEST_CASE("Copy a podio::Collection ", "[podio_copy]") {
 
     auto newTrackCol = copyCollection(tracks);
     REQUIRE(tracks.getID() == newTrackCol->getID());
+    REQUIRE(tracks.size() == 1);
     REQUIRE(tracks.size() == newTrackCol->size());
     REQUIRE(tracks[0].getType() == (*newTrackCol)[0].getType());
     REQUIRE(tracks[0].getNholes() == (*newTrackCol)[0].getNholes());
-    //TrivialCollectionProvider provider;
-    //provider.add(newTrackCol->getID(), newTrackCol.get());
-    //newTrackCol->setReferences(&provider);
   }
 }

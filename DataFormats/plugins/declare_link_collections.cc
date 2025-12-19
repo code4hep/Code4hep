@@ -2,7 +2,7 @@
 
 #include "edm4hep/edm4hep.h"
 
-//NOTE: the macro can not handle a comma in a type name
+//NOTE: `C4H_COLLECTION_NAMED` macro with the `using` declaration is used to avoid passing commas in type names to other macros, which cannot handle that
 
 using CaloMCPartLink = podio::LinkCollection<edm4hep::CalorimeterHit, edm4hep::MCParticle>;
 C4H_COLLECTION_NAMED(CaloMCPartLink, "podio::LinkCollection<edm4hep::CalorimeterHit,edm4hep::MCParticle>");

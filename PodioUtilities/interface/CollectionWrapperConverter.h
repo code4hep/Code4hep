@@ -65,10 +65,10 @@ namespace code4hep {
 
 #define C4H_CONTAINED_CLASS_SYM(x, y) C4H_CONTAINED_CLASS_SYM2(x, y)
 #define C4H_CONTAINED_CLASS_SYM2(x, y) x##y
-#define C4H_CONTAINED_CLASS(collection, type) \
-  static const code4hep::cwc::AddEntry<collection, type> C4H_CONTAINED_CLASS_SYM(s_entry, __LINE__)(#type)
 
 #define C4H_CONTAINED_CLASS_NAMED(collection, type, name) \
   static const code4hep::cwc::AddEntry<collection, type> C4H_CONTAINED_CLASS_SYM(s_entry, __LINE__)(name)
+
+#define C4H_CONTAINED_CLASS(collection, type) C4H_CONTAINED_CLASS_NAMED(collection, type, #type)
 
 #endif
