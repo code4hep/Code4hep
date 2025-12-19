@@ -35,9 +35,7 @@ namespace code4hep {
       return s_copiers;
     }
 
-    std::unique_ptr<podio::CollectionBase> createEmpty() const {
-      return std::make_unique<T>();
-    }
+    std::unique_ptr<podio::CollectionBase> createEmpty() const final { return std::make_unique<T>(); }
 
   private:
     CollectionWrapperConverterBase::FromVectorToVector copier(std::string_view iName) const final {
@@ -67,7 +65,10 @@ namespace code4hep {
 
 #define C4H_CONTAINED_CLASS_SYM(x, y) C4H_CONTAINED_CLASS_SYM2(x, y)
 #define C4H_CONTAINED_CLASS_SYM2(x, y) x##y
-#define C4H_CONTAINED_CLASS(collection, name, type) \
+#define C4H_CONTAINED_CLASS(collection, type) \
+  static const code4hep::cwc::AddEntry<collection, type> C4H_CONTAINED_CLASS_SYM(s_entry, __LINE__)(#type)
+
+#define C4H_CONTAINED_CLASS_NAMED(collection, type, name) \
   static const code4hep::cwc::AddEntry<collection, type> C4H_CONTAINED_CLASS_SYM(s_entry, __LINE__)(name)
 
 #endif

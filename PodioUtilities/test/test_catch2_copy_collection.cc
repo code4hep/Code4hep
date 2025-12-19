@@ -5,9 +5,9 @@
 
 #include "Code4hep/PodioUtilities/interface/CollectionWrapperConverter.h"
 
-C4H_CONTAINED_CLASS(edm4hep::TrackCollection, "std::int32_t", std::int32_t);
-C4H_CONTAINED_CLASS(edm4hep::TrackCollection, "edm4hep::TrackState", edm4hep::TrackState);
-C4H_CONTAINED_CLASS(edm4hep::TrackCollection, "edm4hep::TrackData", edm4hep::TrackData);
+C4H_CONTAINED_CLASS(edm4hep::TrackCollection, std::int32_t);
+C4H_CONTAINED_CLASS(edm4hep::TrackCollection, edm4hep::TrackState);
+C4H_CONTAINED_CLASS_NAMED(edm4hep::TrackCollection, edm4hep::TrackData, "edm4hep::TrackData");
 
 namespace {
 
