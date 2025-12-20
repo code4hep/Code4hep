@@ -39,9 +39,13 @@ process.test = RunLumiEventAnalyzer(
     expectedEndingIndex = 30
 )
 
-process.testAnalyzer = cms.EDAnalyzer("c4h::TestTracksAnalyzer",
-    eventHeaders = cms.untracked.InputTag("EventHeader"),
+process.testTrackAnalyzer = cms.EDAnalyzer("c4h::TestTracksAnalyzer",
     tracks = cms.untracked.InputTag("TrackCollection")
 )
 
-process.e = cms.EndPath(process.testAnalyzer + process.test)
+process.testEventHeaderAnalyzer = cms.EDAnalyzer("c4h::TestEventHeaderAnalyzer",
+    eventHeaders = cms.untracked.InputTag("EventHeader"),
+)
+
+
+process.e = cms.EndPath(process.testTrackAnalyzer + process.testEventHeaderAnalyzer + process.test)
