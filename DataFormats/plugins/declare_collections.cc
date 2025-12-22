@@ -1,9 +1,15 @@
 #include "Code4hep/PodioUtilities/interface/CollectionMacros.h"
 
 #include "edm4hep/edm4hep.h"
+#include "podio/UserDataCollection.h"
+
+C4H_COLLECTION(podio::UserDataCollection<float>);
+C4H_CONTAINED_CLASS(podio::UserDataCollection<float>, float);
+
+C4H_COLLECTION(podio::UserDataCollection<int32_t>);
+C4H_CONTAINED_CLASS(podio::UserDataCollection<int32_t>, int32_t);
 
 C4H_COLLECTION(edm4hep::TrackCollection);
-
 C4H_CONTAINED_CLASS(edm4hep::TrackCollection, std::int32_t);
 C4H_CONTAINED_CLASS(edm4hep::TrackCollection, edm4hep::TrackState);
 C4H_CONTAINED_CLASS(edm4hep::TrackCollection, edm4hep::TrackData);
