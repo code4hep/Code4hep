@@ -1,6 +1,7 @@
 #include "podio/Writer.h"
 #include "podio/Frame.h"
 #include "podio/CollectionBase.h"
+#include "edm4hep/edm4hep.h"
 
 #include "Code4hep/PodioUtilities/interface/CollectionWrapperConverterBaseFactory.h"
 #include "FWCore/Framework/interface/one/OutputModule.h"
@@ -74,10 +75,12 @@ namespace c4h {
   void PodioOutputModule::write(edm::EventForOutput const& e) {
     auto factory = code4hep::CollectionWrapperConverterBaseFactory::get();
 
+    bool haveEventHeader = false;
     podio::Frame frame;
     for (auto const& product : keptProducts()[edm::InEvent]) {
       auto const& typeName = typeNameConversion(product.first->fullClassName());
 
+      haveEventHeader = (product.first->moduleLabel() == "EventHeader");
       auto converter = factory->create(typeName);
 
       edm::TypeID const& tid = product.first->unwrappedTypeID();
@@ -98,6 +101,14 @@ namespace c4h {
         auto empty = converter->createEmpty();
         frame.put(std::move(empty), collectionName);
       }
+    }
+    if (not haveEventHeader) {
+      auto ehc = std::make_unique<edm4hep::EventHeaderCollection>();
+      auto eh = ehc->create();
+      eh.setEventNumber(e.id().event());
+      eh.setRunNumber(e.id().run());
+      eh.setTimeStamp(e.time().value());
+      frame.put(std::move(ehc), "EventHeader");
     }
     writer_.writeEvent(frame);
   }
