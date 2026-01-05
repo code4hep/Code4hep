@@ -28,16 +28,19 @@ namespace code4hep {
 
     assert(readBufs->references != nullptr);
     assert(writeBufs.references != nullptr);
-    readBufs->references->reserve(writeBufs.references->size());
+    assert(readBufs->references->size() == writeBufs.references->size());
 
-    for (auto const& r : *(writeBufs.references)) {
-      podio::UVecPtr<podio::ObjectID> entry;
-      if (r) {
-        entry = std::make_unique<std::vector<podio::ObjectID>>();
-        entry->reserve(r->size());
-        std::copy(r->begin(), r->end(), std::back_inserter(*entry));
+    {
+      unsigned index = 0;
+      for (auto const& r : *(writeBufs.references)) {
+        podio::UVecPtr<podio::ObjectID> entry;
+        if (r) {
+          entry = std::make_unique<std::vector<podio::ObjectID>>();
+          entry->reserve(r->size());
+          std::copy(r->begin(), r->end(), std::back_inserter(*entry));
+        }
+        readBufs->references->at(index++) = std::move(entry);
       }
-      readBufs->references->emplace_back(std::move(entry));
     }
 
     if (readBufs->vectorMembers != nullptr) {
