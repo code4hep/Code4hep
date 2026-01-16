@@ -26,23 +26,25 @@ namespace code4hep {
       fromVectorToVector(writeBufs.data, readBufs->data, copier(iCollection.getDataTypeName()));
     }
 
-    assert(readBufs->references != nullptr);
-    assert(writeBufs.references != nullptr);
-    assert(readBufs->references->size() == writeBufs.references->size());
+    if (writeBufs.references == nullptr) {
+      assert(readBufs->references == nullptr);
+    } else {
+      assert(readBufs->references != nullptr or writeBufs.references->empty());
+      assert(readBufs->references == nullptr or readBufs->references->size() == writeBufs.references->size());
 
-    {
-      unsigned index = 0;
-      for (auto const& r : *(writeBufs.references)) {
-        podio::UVecPtr<podio::ObjectID> entry;
-        if (r) {
-          entry = std::make_unique<std::vector<podio::ObjectID>>();
-          entry->reserve(r->size());
-          std::copy(r->begin(), r->end(), std::back_inserter(*entry));
+      {
+        unsigned index = 0;
+        for (auto const& r : *(writeBufs.references)) {
+          podio::UVecPtr<podio::ObjectID> entry;
+          if (r) {
+            entry = std::make_unique<std::vector<podio::ObjectID>>();
+            entry->reserve(r->size());
+            std::copy(r->begin(), r->end(), std::back_inserter(*entry));
+          }
+          readBufs->references->at(index++) = std::move(entry);
         }
-        readBufs->references->at(index++) = std::move(entry);
       }
     }
-
     if (readBufs->vectorMembers != nullptr) {
       assert(writeBufs.vectorMembers != nullptr);
 

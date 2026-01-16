@@ -9,5 +9,4 @@
 
 #define C4H_COLLECTION(type) C4H_COLLECTION_NAMED(type, #type)
 
-
 #endif

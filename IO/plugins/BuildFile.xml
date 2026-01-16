@@ -1,4 +1,5 @@
 <use name="FWCore/Framework"/>
+<use name="Code4hep/PodioUtilities"/>
 <use name="podio"/>
 <use name="edm4hep" />
 <use name="python3" />

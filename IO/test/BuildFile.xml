@@ -2,5 +2,6 @@
   <use name="python3" />
   <use name="podio"/>
   <use name="edm4hep"/>
-<use name="catch2"/>
+  <use name="FWCore/TestProcessor"/>
+  <use name="catch2"/>
 </bin>
