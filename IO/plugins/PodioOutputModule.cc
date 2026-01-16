@@ -65,7 +65,7 @@ namespace c4h {
       (void)factory->create(typeName);
     } catch (cms::Exception const&) {
       edm::LogWarning("UnstorableType") << "The type '" << product.fullClassName()
-                                        << "' is not regiersted with the C4H_COLLECTION macro so can not be stored. It "
+                                        << "' is not registered with the C4H_COLLECTION macro so cannot be stored. It "
                                            "will not be consumed by this module.";
       return false;
     }
@@ -96,7 +96,6 @@ namespace c4h {
         assert(copiedCollection);
         frame.put(std::move(copiedCollection), collectionName);
       } else {
-        std::cout << "  product is missing" << std::endl;
         //Data product is missing, but we MUST include one
         auto empty = converter->createEmpty();
         frame.put(std::move(empty), collectionName);

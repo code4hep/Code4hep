@@ -93,6 +93,7 @@ process.add_(cms.Service("JobReportService"))
 
   SECTION("EventWithMCParticleCollection") {
     const std::string fileName = "mcparticle.root";
+    constexpr int kPDG = 11;
     {
       auto configString = setOutputFile(baseOutConfig, fileName);
 
@@ -102,7 +103,7 @@ process.add_(cms.Service("JobReportService"))
       edm::test::TestProcessor tester(config);
       auto mcparticles = std::make_unique<edm4hep::MCParticleCollection>();
       auto particle = mcparticles->create();
-      particle.setPDG(11);
+      particle.setPDG(kPDG);
       tester.test(std::make_pair(mcparticleToken, std::move(mcparticles)));
     }
     {
@@ -137,7 +138,7 @@ process.add_(cms.Service("JobReportService"))
         REQUIRE(r.event() == 1);
         auto v = r.get<edm4hep::MCParticleCollection>("MCParticleCollection", "", "PODIO");
         REQUIRE(v->size() == 1);
-        REQUIRE((*v)[0].getPDG() == 11);
+        REQUIRE((*v)[0].getPDG() == kPDG);
       }
       {
         auto n = tester.findNextTransition();
