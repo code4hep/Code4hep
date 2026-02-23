@@ -36,6 +36,7 @@ namespace code4hep {
     }
 
     std::unique_ptr<podio::CollectionBase> createEmpty() const final { return std::make_unique<T>(); }
+    std::unique_ptr<edm::WrapperBase> createEmptyWrapper() const final { return std::make_unique<edm::Wrapper<T>>(); }
 
   private:
     CollectionWrapperConverterBase::FromVectorToVector copier(std::string_view iName) const final {

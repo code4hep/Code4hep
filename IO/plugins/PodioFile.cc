@@ -30,7 +30,9 @@ namespace c4h {
 
   using namespace edm;
 
-  PodioFile::PodioFile(std::string const& fileName, ProcessHistoryRegistry& processHistoryRegistry) {
+  PodioFile::PodioFile(std::string const& fileName,
+                       ProcessHistoryRegistry& processHistoryRegistry,
+                       bool ignoreMissingOnFirstEvent) {
     try {
       podioReader_ = std::make_unique<podio::Reader>(podio::makeReader(fileName));
       logFileAction("  Successfully opened file ", fileName);
@@ -59,7 +61,7 @@ namespace c4h {
     frame_ = podioReader_->readFrame("events", eventIndex);
     eventIndexOfOpenFrame_ = eventIndex;
 
-    auto productRegistry = c4h::fillProductRegistry(frame_, processNameForInputProducts);
+    auto productRegistry = c4h::fillProductRegistry(frame_, processNameForInputProducts, ignoreMissingOnFirstEvent);
     productRegistry_.reset(productRegistry.release());
   }
 

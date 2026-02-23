@@ -28,7 +28,9 @@ namespace c4h {
 
   class PodioFile {
   public:
-    PodioFile(std::string const& fileName, ProcessHistoryRegistry& processHistoryRegistry);
+    PodioFile(std::string const& fileName,
+              ProcessHistoryRegistry& processHistoryRegistry,
+              bool ignoreMissingOnFirstEvent);
 
     PodioFile(PodioFile const&) = delete;
     PodioFile& operator=(PodioFile const&) = delete;

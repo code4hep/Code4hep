@@ -113,6 +113,10 @@ int main(int argc, char* argv[]) {
         for (const auto& collection : frame.getAvailableCollections()) {
           std::cout << "        collection name = " << std::left << std::setw(40) << collection;
           const podio::CollectionBase* collectionBase = frame.get(collection);
+          if (!collectionBase) {
+            std::cout << "    (collection pointer is null, cannot get collection type)" << std::endl;
+            continue;
+          }
           std::cout << "    collection type = " << collectionBase->getTypeName() << std::endl;
 
           if (collection == "EventHeader") {

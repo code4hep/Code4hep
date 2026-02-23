@@ -71,8 +71,6 @@ TestTracksProducer::TestTracksProducer(const edm::ParameterSet& iConfig) : putTo
 
 // ------------ method called to produce the data  ------------
 void TestTracksProducer::produce(edm::StreamID, edm::Event& iEvent, const edm::EventSetup& iSetup) const {
-  using namespace edm;
-
   edm4hep::TrackCollection tracks;
 
   auto track = tracks.create();
@@ -82,10 +80,7 @@ void TestTracksProducer::produce(edm::StreamID, edm::Event& iEvent, const edm::E
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
 void TestTracksProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
-  //The following says we do not know what parameters are allowed so do no validation
-  // Please change this to state exactly what you do use, even if it is no parameters
   edm::ParameterSetDescription desc;
-  desc.setUnknown();
   descriptions.addDefault(desc);
 }
 

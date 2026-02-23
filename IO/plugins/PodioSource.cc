@@ -48,6 +48,7 @@ namespace c4h {
     std::vector<std::string>::const_iterator currentFileIter_;
     std::vector<std::string>::const_iterator lastFileIter_;
     bool firstFile_{true};
+    bool ignoreMissingOnFirstEvent_;
     std::unique_ptr<PodioFile> podioFile_;
   };
 
@@ -55,13 +56,15 @@ namespace c4h {
       : InputSource(pset, desc),
         inputFiles_(pset.getUntrackedParameter<std::vector<std::string>>("fileNames")),
         currentFileIter_(inputFiles_.begin()),
-        lastFileIter_(inputFiles_.end() - 1) {
+        lastFileIter_(inputFiles_.end() - 1),
+        ignoreMissingOnFirstEvent_(pset.getUntrackedParameter<bool>("ignoreMissingOnFirstEvent")) {
     if (processingMode() != RunsLumisAndEvents) {
       throw Exception(errors::Configuration) << "PodioSource constructor: PodioSource does not support\n"
                                              << "processing modes other than RunsLumisAndEvents\n";
     }
     if (currentFileIter_ != inputFiles_.end()) {
-      podioFile_ = std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate());
+      podioFile_ =
+          std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate(), ignoreMissingOnFirstEvent_);
     }
 
     std::vector<std::string> processOrder;
@@ -73,6 +76,17 @@ namespace c4h {
   void PodioSource::fillDescriptions(ConfigurationDescriptions& descriptions) {
     ParameterSetDescription desc;
     desc.addUntracked<std::vector<std::string>>("fileNames")->setComment("Names of files to be processed.");
+    desc.addUntracked<bool>("ignoreMissingOnFirstEvent", false)
+        ->setComment(
+            "By default, PodioSource will throw an exception if a collection that Podio says "
+            "is available is missing in the first event of a file. PodioSource needs all collections "
+            "in the first event to initialize properly. If this parameter is set to true, the "
+            "source will ignore the missing collection entirely. The problem with ignoring "
+            "is that if a module tries to get such a collection from a later event, the Framework "
+            "will throw a ProductNotFound exception even when the collection is present "
+            "(or the Handle will be invalid if using the Handle interface). "
+            "It could also cause a file merge failure if the problem is in the first file of a "
+            "file merge process.");
     InputSource::fillDescription(desc);
     descriptions.add("source", desc);
   }
@@ -105,7 +119,8 @@ namespace c4h {
       firstFile_ = false;
     } else {
       ++currentFileIter_;
-      podioFile_ = std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate());
+      podioFile_ =
+          std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate(), ignoreMissingOnFirstEvent_);
     }
 
     // make sure the new product registry is compatible with the main one

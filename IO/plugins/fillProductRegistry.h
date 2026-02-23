@@ -19,6 +19,7 @@
 namespace c4h {
 
   std::unique_ptr<edm::ProductRegistry> fillProductRegistry(podio::Frame const& podioFrame,
-                                                            std::string const& processName);
+                                                            std::string const& processName,
+                                                            bool ignoreMissingOnFirstEvent);
 }  // namespace c4h
 #endif

@@ -12,17 +12,15 @@ process.Tracer = cms.Service("Tracer")
 
 process.source = cms.Source("PodioSource",
     fileNames = cms.untracked.vstring(
-        "edm4hep.root",
-        "edm4hep_copy.root"
-    ),
-    ignoreMissingOnFirstEvent = cms.untracked.bool(False)
+        "testPodioSource.root"
+    )
 )
 
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(-1)
 )
 
-process.testTracksProducer1 = cms.EDProducer("c4h::TestTracksProducer")
+process.testTracksProducer2 = cms.EDProducer("c4h::TestTracksProducer")
 
 from FWCore.Framework.modules import RunLumiEventAnalyzer
 process.test = RunLumiEventAnalyzer(
@@ -50,20 +48,25 @@ process.readTracksFromProducer1 = cms.EDAnalyzer("c4h::TestTracksAnalyzer",
     tracks = cms.untracked.InputTag("testTracksProducer1")
 )
 
+process.readTracksFromProducer2 = cms.EDAnalyzer("c4h::TestTracksAnalyzer",
+    tracks = cms.untracked.InputTag("testTracksProducer2")
+)
+
 process.testEventHeaderAnalyzer = cms.EDAnalyzer("c4h::TestEventHeaderAnalyzer",
     eventHeaders = cms.untracked.InputTag("EventHeader"),
 )
 
-process.p = cms.Path(process.testTracksProducer1)
+process.p = cms.Path(process.testTracksProducer2)
 
 process.e = cms.EndPath(process.test +
                         process.readTrackCollection +
                         process.readTracksFromProducer1 +
+                        process.readTracksFromProducer2 +
                         process.testEventHeaderAnalyzer
 )
 
 process.out = cms.OutputModule("PodioOutputModule",
-    fileName = cms.untracked.string('testPodioSource.root')
+    fileName = cms.untracked.string('testPodioSource2.root')
 )
 
 process.outpath = cms.EndPath(process.out)
