@@ -13,6 +13,9 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include <memory>
+
+#include "TypeNameConversion.h"
+
 namespace c4h {
 
   class PodioOutputModule : public edm::one::OutputModule<> {
@@ -21,7 +24,6 @@ namespace c4h {
     static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
   private:
-    std::string const& typeNameConversion(std::string const&) const;
     void write(edm::EventForOutput const& e) final;
     void writeLuminosityBlock(edm::LuminosityBlockForOutput const&) final;
     void writeRun(edm::RunForOutput const&) final;
@@ -46,17 +48,6 @@ namespace c4h {
     oDesc.addDefault(pset);
   }
 
-  std::string const& PodioOutputModule::typeNameConversion(std::string const& iRootTypeName) const {
-    static std::unordered_map<std::string, std::string> s_conversion = {
-        {"podio::UserDataCollection<float,void>", "podio::UserDataCollection<float>"},
-        {"podio::UserDataCollection<int,void>", "podio::UserDataCollection<int32_t>"}};
-    auto itFound = s_conversion.find(iRootTypeName);
-    if (itFound != s_conversion.end()) {
-      return itFound->second;
-    }
-
-    return iRootTypeName;
-  }
   bool PodioOutputModule::finalSelection(edm::ProductDescription const& product) const {
     try {
       auto const& typeName = typeNameConversion(product.fullClassName());
@@ -80,7 +71,9 @@ namespace c4h {
     for (auto const& product : keptProducts()[edm::InEvent]) {
       auto const& typeName = typeNameConversion(product.first->fullClassName());
 
-      haveEventHeader = (product.first->moduleLabel() == "EventHeader");
+      if (product.first->moduleLabel() == "EventHeader") {
+        haveEventHeader = true;
+      }
       auto converter = factory->create(typeName);
 
       edm::TypeID const& tid = product.first->unwrappedTypeID();

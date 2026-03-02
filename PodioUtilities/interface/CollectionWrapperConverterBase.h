@@ -27,6 +27,7 @@ namespace code4hep {
     std::unique_ptr<podio::CollectionBase> copy(podio::CollectionBase&) const;
 
     virtual std::unique_ptr<podio::CollectionBase> createEmpty() const = 0;
+    virtual std::unique_ptr<edm::WrapperBase> createEmptyWrapper() const = 0;
 
     using FromVectorToVector = std::function<void(void const*, void*)>;
 

@@ -5,6 +5,7 @@ function die { echo $1: status $2 ;  exit $2; }
 
 LOCAL_TEST_DIR="${CMSSW_BASE}/src/Code4hep/Test/test"
 F1=${LOCAL_TEST_DIR}/testPodioSource_cfg.py
+F2=${LOCAL_TEST_DIR}/testPodioSource2_cfg.py
 
 # create an input file to use as input for the test
 createEDM4hepFile.py
@@ -26,3 +27,4 @@ cp edm4hep.root edm4hep_copy.root
 # If that happens, then we will need to update the expected
 # values in the testPodioSource_cfg.py file.
 (cmsRun $F1 ) || die "Failure using $F1" $?
+(cmsRun $F2 ) || die "Failure using $F2" $?
