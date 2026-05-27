@@ -19,11 +19,11 @@ namespace c4h {
     dd4hep::Detector const* geometry() const { return geometry_; }
 
   private:
-      void process(const std::string&);
+    void process(const std::string&);
 
-      dd4hep::Detector* geometry_ = nullptr;
-      const std::string tag_;
+    dd4hep::Detector* geometry_ = nullptr;
+    const std::string tag_;
   };
-}
+}  // namespace c4h
 
 #endif

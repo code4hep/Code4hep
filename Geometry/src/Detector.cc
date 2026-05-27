@@ -34,7 +34,7 @@ namespace c4h {
     assert(geometry_);
     return dd4hep::detail::tools::findElement(*geometry_, path);
   }
-}
+}  // namespace c4h
 
 #include "FWCore/Utilities/interface/typelookup.h"
 

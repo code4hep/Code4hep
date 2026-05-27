@@ -23,7 +23,9 @@ public:
   static void fillDescriptions(edm::ConfigurationDescriptions&);
 
 protected:
-  void setIntervalFor(const edm::eventsetup::EventSetupRecordKey&, const edm::IOVSyncValue&, edm::ValidityInterval&) override;
+  void setIntervalFor(const edm::eventsetup::EventSetupRecordKey&,
+                      const edm::IOVSyncValue&,
+                      edm::ValidityInterval&) override;
 
 private:
   const std::string appendToDataLabel_;
@@ -36,8 +38,8 @@ DetectorESSource::DetectorESSource(const edm::ParameterSet& iConfig)
       confGeomXMLFiles_(iConfig.getParameter<edm::FileInPath>("confGeomXMLFiles").fullPath()),
       label_(iConfig.getParameter<std::string>("label")) {
   usesResources({edm::ESSharedResourceNames::kDD4hep});
-  edm::LogVerbatim("Geometry") << "DetectorESSource:: appendToDataLabel " << appendToDataLabel_
-                               << " label " << label_ << " confGeomXMLFiles " << confGeomXMLFiles_;
+  edm::LogVerbatim("Geometry") << "DetectorESSource:: appendToDataLabel " << appendToDataLabel_ << " label " << label_
+                               << " confGeomXMLFiles " << confGeomXMLFiles_;
   setWhatProduced(this);
   findingRecord<GeometryRecord>();
 }
@@ -53,8 +55,8 @@ void DetectorESSource::fillDescriptions(edm::ConfigurationDescriptions& descript
 }
 
 void DetectorESSource::setIntervalFor(const edm::eventsetup::EventSetupRecordKey& iKey,
-                                          const edm::IOVSyncValue& iTime,
-                                          edm::ValidityInterval& oInterval) {
+                                      const edm::IOVSyncValue& iTime,
+                                      edm::ValidityInterval& oInterval) {
   oInterval = edm::ValidityInterval(edm::IOVSyncValue::beginOfTime(), edm::IOVSyncValue::endOfTime());  //infinite
 }
 
