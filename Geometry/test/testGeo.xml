@@ -1,0 +1,50 @@
+<lccdd>
+
+  <info name="Test_Geometry"
+    title="Minimal DD4hep Test Geometry"
+    author="Kevin Pedro"
+    url="none"
+    status="test"
+    version="0">
+    <comment>A standalone XML file for testing detector geometry and magnetic field</comment>
+  </info>
+
+  <includes>
+    <gdmlFile ref="elements.xml"/>
+    <gdmlFile ref="materials.xml"/>
+  </includes>
+
+  <plugins>
+    <plugin name="DD4hepVolumeManager"/>
+  </plugins>
+
+  <define>
+    <constant name="world_side" value="10.0*m"/>
+    <constant name="world_x" value="world_side"/>
+    <constant name="world_y" value="world_side"/>
+    <constant name="world_z" value="world_side"/>
+    <constant name="box_size" value="1.0*m"/>
+  </define>
+
+  <tracking_limits>
+    <max_time value="10.0*ns"/>
+  </tracking_limits>
+
+  <detectors>
+    <detector id="1" name="TestBox" type="DD4hep_BoxSegment" insideTrackingVolume="true">
+      <box x="box_size" y="box_size" z="box_size"/>
+      <material name="Vacuum"/>
+    </detector>
+  </detectors>
+
+  <fields>
+    <field type="solenoid" name="TestSolenoid" 
+           inner_field="4.0*tesla" 
+           outer_field="0.0*tesla" 
+           zmin="-2.0*m" 
+           zmax="2.0*m" 
+           inner_radius="0.0*m" 
+           outer_radius="1.5*m"/>
+  </fields>
+
+</lccdd>
