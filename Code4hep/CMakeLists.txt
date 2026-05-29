@@ -1,0 +1,5 @@
+add_subdirectory(DataFormats)
+add_subdirectory(IO)
+add_subdirectory(PodioUtilities)
+#add_subdirectory(Test)
+add_subdirectory(TestModules)

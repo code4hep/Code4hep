@@ -94,13 +94,13 @@ namespace c4h {
   InputSource::ItemTypeInfo PodioSource::getNextItemType() {
     if (firstFile_) {
       if (currentFileIter_ == inputFiles_.end()) {
-        return ItemType::IsStop;
+        return InputSource::ItemTypeInfo::isStop();
       }
       return ItemTypeInfo(ItemType::IsFile);
     }
     ItemType nextItemType = podioFile_->getNextItemType();
     if (nextItemType != ItemType::IsFile) {
-      return nextItemType;
+      return InputSource::ItemTypeInfo(nextItemType);
     }
     if (currentFileIter_ == lastFileIter_) {
       return ItemTypeInfo(ItemType::IsStop);
