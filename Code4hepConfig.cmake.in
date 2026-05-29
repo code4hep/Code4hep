@@ -1,0 +1,62 @@
+@PACKAGE_INIT@
+
+# Code4hepConfig.cmake
+# Configuration file for the Code4hep package
+
+# Include helper for finding dependencies
+include(CMakeFindDependencyMacro)
+
+# Compute paths
+get_filename_component(Code4hep_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+# Add CMake module path for custom Find modules
+list(APPEND CMAKE_MODULE_PATH "${Code4hep_CMAKE_DIR}")
+
+# Find all required dependencies that Code4hep targets link against
+# These must be found before including CMSSSWTargets.cmake
+
+# Find Stitched
+find_dependency(Stitched REQUIRED)
+
+# Find EDM4HEP
+find_dependency(EDM4HEP REQUIRED)
+
+# Find podio
+find_dependency(podio REQUIRED)
+
+# Find ROOT
+find_dependency(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree)
+
+# Include the targets file
+include("${Code4hep_CMAKE_DIR}/Code4hepTargets.cmake")
+
+# Set variables for compatibility
+set(Code4hep_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set(Code4hep_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
+
+# Provide a list of available libraries/components
+set(Code4hep_LIBRARIES
+    code4hep_PodioUtilities
+    code4hep_DataFormats
+)
+
+# Check if requested components are available
+if(Code4hep_FIND_COMPONENTS)
+    foreach(comp ${Code4hep_FIND_COMPONENTS})
+        if(NOT TARGET ${comp})
+            if(Code4hep_FIND_REQUIRED_${comp})
+                message(FATAL_ERROR "Code4hep component ${comp} not found")
+            else()
+                message(WARNING "Code4hep component ${comp} not found")
+            endif()
+            set(Code4hep_${comp}_FOUND FALSE)
+        else()
+            set(Code4hep_${comp}_FOUND TRUE)
+        endif()
+    endforeach()
+endif()
+
+check_required_components(Code4hep)
+
+# Provide helpful information
+message(STATUS "Found Code4hep: ${Code4hep_CMAKE_DIR}")

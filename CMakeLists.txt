@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Code4Hep)
+project(Code4Hep VERSION 0.1.0 LANGUAGES CXX)
 
 # Set C++ standard (C++20 required for concepts)
 set(CMAKE_CXX_STANDARD 20)
@@ -10,6 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Stitched REQUIRED)
 find_package(EDM4HEP REQUIRED)
 find_package(podio REQUIRED)
+find_package(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree)
 
 # Include GNUInstallDirs early so variables are available for environment scripts
 include(GNUInstallDirs)
@@ -70,6 +71,38 @@ foreach(target ${Code4Hep_EXPORT_TARGETS})
         )
     endif()
 endforeach()
+
+# install python
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python
+        DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+# Export targets file
+install(EXPORT Code4HepTargets
+    FILE Code4hepTargets.cmake
+    NAMESPACE Code4hep::
+    DESTINATION ${CONFIG_INSTALL_DIR}
+)
+
+# Configure and install package config files
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Code4hepConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Code4hepConfig.cmake
+    INSTALL_DESTINATION ${CONFIG_INSTALL_DIR}
+    PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/Code4hepConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/Code4hepConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/Code4hepConfigVersion.cmake
+    DESTINATION ${CONFIG_INSTALL_DIR}
+)
+
 
 # Print installation information
 message(STATUS "Code4Hep will be installed to: ${CMAKE_INSTALL_PREFIX}")
