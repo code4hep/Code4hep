@@ -25,7 +25,7 @@ namespace c4h {
     geometry_->apply(name.c_str(), 2, (char**)files);
   }
 
-  TGeoManager& Detector::manager() const {
+  const TGeoManager& Detector::manager() const {
     assert(geometry_);
     return geometry_->manager();
   }

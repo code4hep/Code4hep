@@ -14,7 +14,7 @@ namespace c4h {
     Detector() = delete;
 
     //accessors
-    TGeoManager& manager() const;
+    const TGeoManager& manager() const;
     dd4hep::DetElement findElement(const std::string& el) const;
     dd4hep::Detector const* geometry() const { return geometry_; }
 
