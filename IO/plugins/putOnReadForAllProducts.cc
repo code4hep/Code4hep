@@ -20,6 +20,16 @@ namespace c4h {
                                edm::EventPrincipal& eventPrincipal) {
     auto factory = code4hep::CollectionWrapperConverterBaseFactory::get();
 
+    // It is important that are two iterations, one to get the
+    // collections into the Frame and then a second to move them
+    // into the Event. The initialization of one-to-many relations
+    // fails if these steps are done in the same iteration.
+    for (auto const& iter : productRegistry.productList()) {
+      auto const& productDescription = iter.second;
+      std::string const& moduleLabel = productDescription.moduleLabel();
+      podioFrame.get(moduleLabel);
+    }
+
     for (auto const& iter : productRegistry.productList()) {
       auto const& productDescription = iter.second;
       std::string const& moduleLabel = productDescription.moduleLabel();
