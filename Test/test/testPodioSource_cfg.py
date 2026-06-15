@@ -24,7 +24,7 @@ process.maxEvents = cms.untracked.PSet(
 
 process.testTracksProducer1 = cms.EDProducer("c4h::TestTracksProducer")
 
-from FWCore.Framework.modules import RunLumiEventAnalyzer
+from FWCore.TestModules.modules import RunLumiEventAnalyzer
 process.test = RunLumiEventAnalyzer(
     verbose = False,
     expectedRunLumiEvents = [
