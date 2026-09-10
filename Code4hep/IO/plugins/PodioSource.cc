@@ -49,6 +49,8 @@ namespace c4h {
     std::vector<std::string>::const_iterator lastFileIter_;
     bool firstFile_{true};
     bool ignoreMissingOnFirstEvent_;
+    RunNumber_t runOffset_;
+    EventNumber_t eventOffset_;
     std::unique_ptr<PodioFile> podioFile_;
   };
 
@@ -57,14 +59,16 @@ namespace c4h {
         inputFiles_(pset.getUntrackedParameter<std::vector<std::string>>("fileNames")),
         currentFileIter_(inputFiles_.begin()),
         lastFileIter_(inputFiles_.end() - 1),
-        ignoreMissingOnFirstEvent_(pset.getUntrackedParameter<bool>("ignoreMissingOnFirstEvent")) {
+        ignoreMissingOnFirstEvent_(pset.getUntrackedParameter<bool>("ignoreMissingOnFirstEvent")),
+	runOffset_(pset.getUntrackedParameter<unsigned int>("runOffset")),
+        eventOffset_(pset.getUntrackedParameter<unsigned int>("eventOffset")) {
     if (processingMode() != RunsLumisAndEvents) {
       throw Exception(errors::Configuration) << "PodioSource constructor: PodioSource does not support\n"
                                              << "processing modes other than RunsLumisAndEvents\n";
     }
     if (currentFileIter_ != inputFiles_.end()) {
       podioFile_ =
-          std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate(), ignoreMissingOnFirstEvent_);
+	std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate(), ignoreMissingOnFirstEvent_, runOffset_, eventOffset_);
     }
 
     std::vector<std::string> processOrder;
@@ -87,6 +91,8 @@ namespace c4h {
             "(or the Handle will be invalid if using the Handle interface). "
             "It could also cause a file merge failure if the problem is in the first file of a "
             "file merge process.");
+    desc.addUntracked<unsigned int>("eventOffset", 0)->setComment("offset the starting event number");
+    desc.addUntracked<unsigned int>("runOffset", 0)->setComment("offset the starting run number");
     InputSource::fillDescription(desc);
     descriptions.add("source", desc);
   }
@@ -120,7 +126,7 @@ namespace c4h {
     } else {
       ++currentFileIter_;
       podioFile_ =
-          std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate(), ignoreMissingOnFirstEvent_);
+	std::make_unique<PodioFile>(*currentFileIter_, processHistoryRegistryForUpdate(), ignoreMissingOnFirstEvent_, runOffset_, eventOffset_);
     }
 
     // make sure the new product registry is compatible with the main one

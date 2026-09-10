@@ -19,7 +19,7 @@ namespace c4h {
     auto writeBufs = iCollection.getBuffers();
 
     auto readBufs = podio::CollectionBufferFactory::instance().createBuffers(
-        std::string(iCollection.getTypeName()), iCollection.getSchemaVersion(), false);
+        std::string(iCollection.getTypeName()), iCollection.getSchemaVersion(), iCollection.isSubsetCollection());
     assert(readBufs);
 
     if (writeBufs.data) {

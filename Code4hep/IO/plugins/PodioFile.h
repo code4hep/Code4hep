@@ -30,7 +30,9 @@ namespace c4h {
   public:
     PodioFile(std::string const& fileName,
               ProcessHistoryRegistry& processHistoryRegistry,
-              bool ignoreMissingOnFirstEvent);
+              bool ignoreMissingOnFirstEvent,
+	      RunNumber_t runOffset,
+	      EventNumber_t eventOffset);
 
     PodioFile(PodioFile const&) = delete;
     PodioFile& operator=(PodioFile const&) = delete;
@@ -51,10 +53,12 @@ namespace c4h {
   private:
     std::unique_ptr<podio::Reader> podioReader_;
     InputSource::ItemType nextItemType_{InputSource::ItemType::IsInvalid};
+    RunNumber_t runOffset_{invalidRunNumber};
     RunNumber_t nextRun_{invalidRunNumber};
     // Podio files don't have a concept of lumis, so we just use a dummy value
     // that is always 1
     LuminosityBlockNumber_t nextLumi_{1U};
+    EventNumber_t eventOffset_{invalidEventNumber};
     EventNumber_t nextEvent_{invalidEventNumber};
     ProcessHistoryID processHistoryID_;
     std::size_t numberOfEvents_{0};
