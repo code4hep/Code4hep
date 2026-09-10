@@ -30,6 +30,8 @@ namespace c4h {
       assert(readBufs->references == nullptr);
     } else {
       assert(readBufs->references != nullptr or writeBufs.references->empty());
+      std::cout << readBufs->references << ' ' << readBufs->references->size() << ' ' << writeBufs.references->size() << std::endl;
+      std::cout << iCollection.getTypeName() << ' ' << iCollection.getDataTypeName() << std::endl;
       assert(readBufs->references == nullptr or readBufs->references->size() == writeBufs.references->size());
 
       {
