@@ -3,10 +3,6 @@ import FWCore.ParameterSet.Config as cms
 process = cms.Process("TEST")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
-process.MessageLogger.cout = cms.untracked.PSet(
-    threshold = cms.untracked.string('INFO'),
-    enable = cms.untracked.bool(True)
-)
 
 process.source = cms.Source("PodioSource",
     fileNames = cms.untracked.vstring(

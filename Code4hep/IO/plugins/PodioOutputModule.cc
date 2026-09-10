@@ -13,6 +13,7 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include <memory>
+#include <string>
 
 #include "TypeNameConversion.h"
 
@@ -49,13 +50,19 @@ namespace c4h {
   }
 
   bool PodioOutputModule::finalSelection(edm::ProductDescription const& product) const {
+    std::string const& fullClassName = product.fullClassName();
+    if (fullClassName == "edm::EndPathStatus" ||
+        fullClassName == "edm::HLTPathStatus" ||
+        fullClassName == "edm::TriggerResults") {
+      return false;
+    }
     try {
-      auto const& typeName = typeNameConversion(product.fullClassName());
+      auto const& typeName = typeNameConversion(fullClassName);
 
       auto factory = c4h::CollectionWrapperConverterBaseFactory::get();
       (void)factory->create(typeName);
     } catch (cms::Exception const&) {
-      edm::LogWarning("UnstorableType") << "The type '" << product.fullClassName()
+      edm::LogWarning("UnstorableType") << "The type '" << fullClassName
                                         << "' is not registered with the C4H_COLLECTION macro so cannot be stored. It "
                                            "will not be consumed by this module.";
       return false;
