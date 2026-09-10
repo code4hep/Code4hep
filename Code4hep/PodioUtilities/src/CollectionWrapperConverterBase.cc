@@ -19,7 +19,7 @@ namespace c4h {
     auto writeBufs = iCollection.getBuffers();
 
     auto readBufs = podio::CollectionBufferFactory::instance().createBuffers(
-        std::string(iCollection.getTypeName()), iCollection.getSchemaVersion(), false);
+        std::string(iCollection.getTypeName()), iCollection.getSchemaVersion(), iCollection.isSubsetCollection());
     assert(readBufs);
 
     if (writeBufs.data) {
@@ -30,8 +30,6 @@ namespace c4h {
       assert(readBufs->references == nullptr);
     } else {
       assert(readBufs->references != nullptr or writeBufs.references->empty());
-      std::cout << readBufs->references << ' ' << readBufs->references->size() << ' ' << writeBufs.references->size() << std::endl;
-      std::cout << iCollection.getTypeName() << ' ' << iCollection.getDataTypeName() << std::endl;
       assert(readBufs->references == nullptr or readBufs->references->size() == writeBufs.references->size());
 
       {
