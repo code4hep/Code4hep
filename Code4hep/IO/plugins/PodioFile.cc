@@ -32,7 +32,11 @@ namespace c4h {
 
   PodioFile::PodioFile(std::string const& fileName,
                        ProcessHistoryRegistry& processHistoryRegistry,
-                       bool ignoreMissingOnFirstEvent) {
+                       bool ignoreMissingOnFirstEvent,
+		       RunNumber_t runOffset,
+		       EventNumber_t eventOffset) {
+    runOffset_ = runOffset;
+    eventOffset_ = eventOffset;
     try {
       podioReader_ = std::make_unique<podio::Reader>(podio::makeReader(fileName));
       logFileAction("  Successfully opened file ", fileName);
@@ -88,8 +92,8 @@ namespace c4h {
       }
       auto const& eventHeaderCollection = frame_.get<edm4hep::EventHeaderCollection>("EventHeader");
       auto const& eventHeader = eventHeaderCollection.at(0);
-      RunNumber_t run = eventHeader.getRunNumber();
-      nextEvent_ = eventHeader.getEventNumber();
+      RunNumber_t run = eventHeader.getRunNumber() + runOffset_;
+      nextEvent_ = eventHeader.getEventNumber() + eventOffset_;
       if (nextEvent_ == invalidEventNumber) {
         throw Exception(errors::LogicError, "PodioSource") << "Invalid event number in file: " << nextEvent_ << "\n";
       }
