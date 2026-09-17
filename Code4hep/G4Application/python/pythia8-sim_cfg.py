@@ -4,8 +4,6 @@ process = cms.Process("TEST")
 
 from FWCore.Modules.modules import EmptySource
 
-process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
-
 process.source = EmptySource()
 
 process.maxEvents.input = 10
@@ -16,7 +14,6 @@ process.options.numberOfStreams = 0
 
 from Code4hep.G4Application.modules import G4SimProducer
 from Code4hep.Generators.modules import GenProducer
-
 
 process.gen = GenProducer(
     generatorType = cms.string("Pythia8Generator"),

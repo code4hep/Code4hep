@@ -4,8 +4,6 @@ process = cms.Process("TEST")
 
 from FWCore.Modules.modules import EmptySource
 
-process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
-
 process.source = EmptySource()
 
 process.maxEvents.input = 10
