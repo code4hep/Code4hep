@@ -7,6 +7,7 @@ c4h_add_library(
         FWCore/ParameterSet
     EXT_DEPS
         CLHEP::CLHEP
+        EDM4HEP::edm4hep
         XercesC::XercesC
         Geant4::Geant4
         HepMC3::HepMC3
