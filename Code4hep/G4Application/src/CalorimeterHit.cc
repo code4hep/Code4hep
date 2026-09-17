@@ -11,11 +11,7 @@ G4ThreadLocal G4Allocator<CalorimeterHit>* CalorimeterHitAllocator = nullptr;
 /*!
  * Construct with hit data.
  */
-CalorimeterHit::CalorimeterHit(id_type id,
-                               G4double edep,
-                               G4double time,
-                               G4ThreeVector pos)
-  : G4VHit(), id_(id), edep_(edep), time_(time), pos_(pos)
+CalorimeterHit::CalorimeterHit(CaloHitContribution hit) : G4VHit(), hit_(hit)
 {
 }
 
@@ -23,10 +19,7 @@ CalorimeterHit::~CalorimeterHit() {}
 
 const CalorimeterHit& CalorimeterHit::operator=(const CalorimeterHit& rhs)
 {
-  id_   = rhs.id_;
-  edep_ = rhs.edep_;
-  time_ = rhs.time_;
-  pos_  = rhs.pos_;
+  hit_ = rhs.hit_;
 
   return *this;
 }
