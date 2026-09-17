@@ -54,6 +54,7 @@ private:
   void produce(edm::Event&, const edm::EventSetup&) override;
   void beginRun(edm::Run const&, edm::EventSetup const&) override;
   void endRun(edm::Run const&, edm::EventSetup const&) override;
+  void endStream() override;
 
 private:
   int m_maxEvents{};
@@ -89,16 +90,7 @@ G4SimProducer::G4SimProducer(const edm::ParameterSet& p,
   });
 }
 
-G4SimProducer::~G4SimProducer()
-{
-  // Reset the worker interface on the worker thread to keep all Geant4
-  // lifecycle operations bound to the same thread context.
-  auto token = edm::ServiceRegistry::instance().presentToken();
-  m_handoff.runAndWait([this, token]() {
-    edm::ServiceRegistry::Operate guard{token};
-    m_workerInterface.reset();
-  });
-}
+G4SimProducer::~G4SimProducer() {}
 
 //---------------------------------------------------------------------------//
 // MEMBER FUNCTIONS
@@ -176,6 +168,19 @@ void G4SimProducer::endRun(edm::Run const&, edm::EventSetup const& es)
   {
     edm::ServiceRegistry::Operate guard{token};
     m_workerInterface->endRun();
+  });
+}
+
+// Method called when ending the processing of a stream
+void G4SimProducer::endStream()
+{
+  // Reset the worker interface on the worker thread to keep all Geant4
+  // lifecycle operations bound to the same thread context - Ensure that
+  // all Geant4 worker threads are deleted before the master thread.
+  auto token = edm::ServiceRegistry::instance().presentToken();
+  m_handoff.runAndWait([this, token]() {
+    edm::ServiceRegistry::Operate guard{token};
+    m_workerInterface.reset();
   });
 }
 
