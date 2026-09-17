@@ -9,6 +9,8 @@
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
 
+#include "edm4hep/SimTrackerHit.h"
+
 namespace c4h
 {
 //---------------------------------------------------------------------------//
@@ -18,11 +20,11 @@ namespace c4h
 
 class TrackerHit : public G4VHit
 {
-  using id_type = unsigned int;
+  using SimTrackerHit = edm4hep::SimTrackerHit;
 
 public:
   TrackerHit() : G4VHit() {}
-  TrackerHit(id_type id, G4double time, G4ThreeVector pos);
+  TrackerHit(SimTrackerHit hit);
   ~TrackerHit() override;
 
   TrackerHit(const TrackerHit&) = default;
@@ -33,14 +35,10 @@ public:
   inline void  operator delete(void*);
 
   // Accessors
-  inline id_type       id() const { return id_; };
-  inline G4double      time() const { return time_; };
-  inline G4ThreeVector pos() const { return pos_; };
+  inline const SimTrackerHit& hit() const { return hit_; };
 
 private:
-  id_type       id_{0};
-  G4double      time_{0};
-  G4ThreeVector pos_{0, 0, 0};
+  SimTrackerHit hit_;
 };
 
 using TrackerHitsCollection = G4THitsCollection<TrackerHit>;
