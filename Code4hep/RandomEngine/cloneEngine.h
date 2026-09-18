@@ -1,5 +1,5 @@
-#ifndef IOMC_RandomEngine_cloneEngine_h
-#define IOMC_RandomEngine_cloneEngine_h
+#ifndef RandomEngine_cloneEngine_h
+#define RandomEngine_cloneEngine_h
 // -*- C++ -*-
 //
 // Package:     IOMC/RandomEngine
