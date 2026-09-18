@@ -3,7 +3,7 @@ c4h_add_library(
     DEPS
         FWCore/Framework
         FWCore/ParameterSet
-	FWCore/Utilities
+        FWCore/Utilities
     EXT_DEPS
         CLHEP::CLHEP
 )
@@ -13,7 +13,7 @@ set(_c4h_shared
     DEPS
         FWCore/Framework
         FWCore/ParameterSet
-	FWCore/Utilities
+        FWCore/Utilities
         FWCore/PluginManager
 )
 
