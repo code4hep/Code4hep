@@ -57,8 +57,8 @@ G4bool TrackerSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   float time = d2f(step->GetPreStepPoint()->GetGlobalTime()); // [ns]
   float stepLength = d2f(step->GetStepLength()); // [mm]
   std::int32_t quality{};
-  auto pos = touchable->GetTranslation();
-  auto mom = step->GetPreStepPoint()->GetMomentum()/CLHEP::GeV; // [GeV]
+  const auto pos = touchable->GetTranslation();
+  const auto mom = step->GetPreStepPoint()->GetMomentum()/CLHEP::GeV; // [GeV]
 
   edm4hep::Vector3d step_pos{pos.x(), pos.y(), pos.z()}; // [mm]
   edm4hep::Vector3f step_mom{d2f(mom.x()), d2f(mom.y()), d2f(mom.z())};

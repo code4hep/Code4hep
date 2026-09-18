@@ -60,7 +60,7 @@ G4bool CalorimeterSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   float energy = d2f(edep/CLHEP::GeV); // [GeV]
   float time = d2f(step->GetPreStepPoint()->GetGlobalTime()); // [ns]
 
-  auto pos = touchable->GetTranslation();
+  const auto pos = touchable->GetTranslation();
   edm4hep::Vector3f step_pos{d2f(pos.x()), d2f(pos.y()), d2f(pos.z())}; // [mm]
   float stepLength = d2f(step->GetStepLength()); // [mm]
 
