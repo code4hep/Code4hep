@@ -57,15 +57,14 @@ G4MasterInterface::G4MasterInterface(edm::ParameterSet const& p)
 
 	// Add a pysics list
         G4PhysListFactory factory;
-        G4VModularPhysicsList* physics
-	  = factory.GetReferencePhysList(physName_);
-
+        auto physics = std::unique_ptr<G4VModularPhysicsList>(
+          factory.GetReferencePhysList(physName_));
         if (!physics)
         {
            G4Exception("main", "InvalidPhysicsList", FatalException,
                         ("Unknown physics list: " + physName_).c_str());
         }
-        runManagerMaster_->SetUserInitialization(physics);
+        runManagerMaster_->SetUserInitialization(physics.release());
 
 	// Add a user detector construction
         auto det = std::make_unique<DetectorConstruction>(gdmlFile_);

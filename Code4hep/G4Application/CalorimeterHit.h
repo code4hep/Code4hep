@@ -9,6 +9,8 @@
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
 
+#include "edm4hep/CaloHitContribution.h"
+
 namespace c4h
 {
 //---------------------------------------------------------------------------//
@@ -17,11 +19,11 @@ namespace c4h
  */
 class CalorimeterHit : public G4VHit
 {
-    using id_type = unsigned int;
+    using CaloHitContribution = edm4hep::CaloHitContribution;
 
   public:
     CalorimeterHit() : G4VHit() {}
-    CalorimeterHit(id_type id, G4double edep, G4double time, G4ThreeVector pos);
+    CalorimeterHit(CaloHitContribution hit);
     ~CalorimeterHit() override;
 
     CalorimeterHit(const CalorimeterHit&) = default;
@@ -32,18 +34,10 @@ class CalorimeterHit : public G4VHit
     inline void operator delete(void*);
 
     // Accessors
-    inline id_type id() const { return id_; };
-    inline G4double edep() const { return edep_; };
-    inline G4double time() const { return time_; };
-    inline G4ThreeVector pos() const { return pos_; };
-
-    inline void add_edep(G4double edep) { edep_ += edep; };
+    inline const CaloHitContribution& hit() const { return hit_; };
 
   private:
-    id_type       id_{0};
-    G4double      edep_{0};
-    G4double      time_{0};
-    G4ThreeVector pos_{0, 0, 0};
+    CaloHitContribution hit_;
 };
 
 using CalorimeterHitsCollection = G4THitsCollection<CalorimeterHit>;

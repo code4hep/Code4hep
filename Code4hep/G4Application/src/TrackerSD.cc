@@ -8,6 +8,8 @@
 #include "G4SDManager.hh"
 #include "G4ios.hh"
 
+#include "edm4hep/SimTrackerHit.h"
+
 namespace c4h
 {
 //---------------------------------------------------------------------------//
@@ -44,21 +46,27 @@ G4bool TrackerSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
   // Get hit data for this sensitive detector
   auto touchable = step->GetPreStepPoint()->GetTouchable();
-  unsigned int id = touchable->GetVolume()->GetCopyNo();
-  auto time = step->GetPreStepPoint()->GetGlobalTime();
-  auto pos = touchable->GetTranslation();
+  std::uint64_t id = touchable->GetVolume()->GetCopyNo();
 
-  //  Return this cell if it was hit before
-  for (auto hit : *(collection_->GetVector()))
+  auto d2f = [](G4double value) -> float
   {
-    if (id == hit->id())
-    {
-      return true;
-    }
-  }
+    return static_cast<float>(value);
+  };
 
-  // Otherwise, create a new hit:
-  collection_->insert(new TrackerHit(id, time, pos));
+  float energy = d2f(step->GetTotalEnergyDeposit()/CLHEP::GeV); // [GeV]
+  float time = d2f(step->GetPreStepPoint()->GetGlobalTime()); // [ns]
+  float stepLength = d2f(step->GetStepLength()); // [mm]
+  std::int32_t quality{};
+  const auto& pos = touchable->GetTranslation();
+  const auto& mom = step->GetPreStepPoint()->GetMomentum()/CLHEP::GeV; // [GeV]
+
+  edm4hep::Vector3d step_pos{pos.x(), pos.y(), pos.z()}; // [mm]
+  edm4hep::Vector3f step_mom{d2f(mom.x()), d2f(mom.y()), d2f(mom.z())};
+
+  edm4hep::SimTrackerHit hit(id, energy, time, stepLength, quality, step_pos, step_mom);
+
+  // Create a new hit contribution and insert it to the collection::
+  collection_->insert(new TrackerHit(hit));
 
   return true;
 }

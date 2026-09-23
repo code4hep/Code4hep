@@ -11,8 +11,7 @@ G4ThreadLocal G4Allocator<TrackerHit>* TrackerHitAllocator = nullptr;
 /*!
  * Construct with hit data.
  */
-TrackerHit::TrackerHit(id_type id, G4double time, G4ThreeVector pos)
-    : G4VHit(), id_(id), time_(time), pos_(pos)
+TrackerHit::TrackerHit(SimTrackerHit hit) : G4VHit(), hit_(hit)
 {
 }
 
@@ -20,9 +19,8 @@ TrackerHit::~TrackerHit() {}
 
 const TrackerHit& TrackerHit::operator=(const TrackerHit& rhs)
 {
-  id_   = rhs.id_;
-  time_ = rhs.time_;
-  pos_  = rhs.pos_;
+  hit_  = rhs.hit_;
+
   return *this;
 }
 

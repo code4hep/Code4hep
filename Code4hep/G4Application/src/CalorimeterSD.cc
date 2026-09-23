@@ -8,6 +8,8 @@
 #include "G4SDManager.hh"
 #include "G4ios.hh"
 
+#include "edm4hep/CaloHitContribution.h"
+
 namespace c4h
 {
 //---------------------------------------------------------------------------//
@@ -47,22 +49,24 @@ G4bool CalorimeterSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 
   // Get hit data for this sensitive detector
   auto touchable = step->GetPreStepPoint()->GetTouchable();
-  unsigned int id = touchable->GetVolume()->GetCopyNo();
-  auto time = step->GetPreStepPoint()->GetGlobalTime();
-  auto pos = touchable->GetTranslation();
 
-  // Add energy deposition for this cell if it was hit before
-  for (auto hit : *(collection_->GetVector()))
+  std::int32_t id = touchable->GetVolume()->GetCopyNo();
+
+  auto d2f = [](G4double value) -> float
   {
-    if (id == hit->id())
-    {
-      hit->add_edep(edep);
-      return true;
-    }
-  }
+    return static_cast<float>(value);
+  };
 
-  // Otherwise, create a new hit:
-  collection_->insert(new CalorimeterHit(id, edep, time, pos));
+  float energy = d2f(edep/CLHEP::GeV); // [GeV]
+  float time = d2f(step->GetPreStepPoint()->GetGlobalTime()); // [ns]
+
+  const auto& pos = touchable->GetTranslation();
+  edm4hep::Vector3f step_pos{d2f(pos.x()), d2f(pos.y()), d2f(pos.z())}; // [mm]
+  float stepLength = d2f(step->GetStepLength()); // [mm]
+
+  // Create a new hit contribution and insert to the collection:
+  edm4hep::CaloHitContribution hit(id, energy, time, step_pos, stepLength);
+  collection_->insert(new CalorimeterHit(hit));
 
   return true;
 }
