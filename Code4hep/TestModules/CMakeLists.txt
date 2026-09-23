@@ -8,6 +8,7 @@ c4h_add_plugin(
         FWCore/ParameterSet
         FWCore/PluginManager
         FWCore/Utilities
+        Code4hep/PodioUtilities
     EXT_DEPS
         podio::podio
         podio::podioIO
