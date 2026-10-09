@@ -2,7 +2,7 @@
 
 # put included files in test directory
 echo $PWD
-export DD4HEP_XML_DIR=$(scram_tag dd4hep-core DD4HEP_CORE_BASE)/DDDetectors/compact
+export DD4HEP_XML_DIR=$(dirname $(readlink -f $(which ddeve)))/../DDDetectors/compact
 ln -sf ${DD4HEP_XML_DIR}/elements.xml .
 ln -sf ${DD4HEP_XML_DIR}/materials.xml .
 C4H_DIR=$(readlink -f ${PWD}/../../../)
