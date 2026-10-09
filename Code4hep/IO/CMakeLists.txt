@@ -18,3 +18,5 @@ c4h_add_plugin(
     SOURCES plugins/*.cc
     ${_c4h_shared}
 )
+
+c4h_auto_subdirectories()
