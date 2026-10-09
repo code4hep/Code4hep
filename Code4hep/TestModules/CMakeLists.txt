@@ -15,3 +15,5 @@ c4h_add_plugin(
         EDM4HEP::edm4hep
         Python3::Python
 )
+
+c4h_auto_subdirectories()

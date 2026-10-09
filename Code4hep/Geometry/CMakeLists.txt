@@ -29,3 +29,5 @@ c4h_add_plugin(
     EXT_DEPS ROOT::Geom
     ${_c4h_shared}
 )
+
+c4h_auto_subdirectories()

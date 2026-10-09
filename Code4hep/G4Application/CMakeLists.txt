@@ -33,3 +33,5 @@ c4h_add_plugin(
     DEPS Code4hep/G4Application
     ${_c4h_shared}
 )
+
+c4h_auto_subdirectories()
