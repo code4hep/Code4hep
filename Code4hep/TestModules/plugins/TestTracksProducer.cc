@@ -32,7 +32,7 @@
 
 #include "edm4hep/TrackCollection.h"
 
-#include "Code4hep/PodioUtilities/setCollectionID.h"
+#include "Code4hep/PodioUtilities/assigningProductTo.h"
 
 //
 // class declaration
@@ -77,7 +77,6 @@ void TestTracksProducer::produce(edm::StreamID, edm::Event& iEvent, const edm::E
 
   auto track = tracks.create();
 
-  setCollectionID(tracks, iEvent, *this, putToken_);
   iEvent.emplace(putToken_, std::move(tracks));
 }
 

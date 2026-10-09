@@ -41,7 +41,7 @@
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "FWCore/Utilities/interface/StreamID.h"
 
-#include "Code4hep/PodioUtilities/setCollectionID.h"
+#include "Code4hep/PodioUtilities/assigningProductTo.h"
 
 namespace c4h {
   class TestRelationsAndLinksProducer : public edm::global::EDProducer<> {
@@ -126,13 +126,6 @@ namespace c4h {
       const auto& inputMCParticle = inputMCParticles[0];
       link.set<edm4hep::MCParticle>(inputMCParticle);
     }
-
-    // Set the collection IDs that Podio needs in the collections
-    setCollectionID(tracks, iEvent, *this, tracksPutToken_);
-    setCollectionID(recDqdxs, iEvent, *this, recDqdxsPutToken_);
-    setCollectionID(reconstructedParticles, iEvent, *this, reconstructedParticlesPutToken_);
-    setCollectionID(mcParticles, iEvent, *this, mcParticlesPutToken_);
-    setCollectionID(trackToMCParticleLinks, iEvent, *this, linksPutToken_);
 
     // Put the collections into the Event
     iEvent.emplace(tracksPutToken_, std::move(tracks));
