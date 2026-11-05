@@ -20,6 +20,7 @@ set(_c4h_shared
         FWCore/ParameterSet
         FWCore/PluginManager
         Code4hep/Generators
+        Code4hep/PodioUtilities
     EXT_DEPS
         Geant4::Geant4
         Python3::Python

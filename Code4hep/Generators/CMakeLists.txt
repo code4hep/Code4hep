@@ -20,6 +20,7 @@ set(_c4h_shared
     DEPS
         FWCore/AbstractServices
         FWCore/Framework
+        Code4hep/PodioUtilities
     EXT_DEPS
         CLHEP::CLHEP
         EDM4HEP::edm4hep

@@ -16,9 +16,14 @@
 #include "Code4hep/G4Application/ThreadHandoff.h"
 #include "Code4hep/G4Application/G4MasterInterface.h"
 #include "Code4hep/G4Application/G4WorkerInterface.h"
+#include "Code4hep/G4Application/G4EventProcessor.h"
+#include "Code4hep/PodioUtilities/assigningProductTo.h"
 
 #include "G4Event.hh"
+
 #include <edm4hep/MCParticleCollection.h>
+#include <edm4hep/CaloHitContributionCollection.h>
+#include <edm4hep/SimTrackerHitCollection.h>
 
 //---------------------------------------------------------------------------//
 /*! 
@@ -56,6 +61,10 @@ private:
   void endRun(edm::Run const&, edm::EventSetup const&) override;
   void endStream() override;
 
+  // Moves a EMD4hep collection into the edm::Event under 'label'
+  template <typename T>
+  static void putCollection(edm::Event& e, T&& coll, const std::string& label);
+
 private:
   int m_maxEvents{};
   omt::ThreadHandoff m_handoff;
@@ -63,6 +72,8 @@ private:
   std::unique_ptr<c4h::G4WorkerInterface> m_workerInterface;
 
   edm::EDGetTokenT<edm4hep::MCParticleCollection> mcToken_;
+
+  c4h::G4EventProcessor m_eventProcessor;
 };
 
 //---------------------------------------------------------------------------//
@@ -80,6 +91,7 @@ G4SimProducer::G4SimProducer(const edm::ParameterSet& p,
   , m_handoff{p.getUntrackedParameter<int>("workerThreadStackSize", 10 * 1024*1024)}
   , m_masterThread(masterThread)
   , mcToken_(consumes(p.getParameter<edm::InputTag>("generator")))
+  , m_eventProcessor([this](G4Event& evt) { m_workerInterface->produce(evt); })
 {
   // Construct the worker interface on the worker thread using the same
   // thread stack semantics as later event processing.
@@ -88,6 +100,9 @@ G4SimProducer::G4SimProducer(const edm::ParameterSet& p,
     edm::ServiceRegistry::Operate guard{token};
     m_workerInterface = std::make_unique<c4h::G4WorkerInterface>(m_maxEvents);
   });
+
+  produces<edm4hep::CaloHitContributionCollection>("CaloHitContributions");
+  produces<edm4hep::SimTrackerHitCollection>("SimTrackerHits");
 }
 
 G4SimProducer::~G4SimProducer() {}
@@ -133,20 +148,23 @@ void G4SimProducer::produce(edm::Event& e, const edm::EventSetup& es)
   
   auto token = edm::ServiceRegistry::instance().presentToken();
 
-  G4Event* evt = nullptr;
-  m_handoff.runAndWait([this, &e, &evt, token]()
+  c4h::G4EventProcessor::HitCollections colls;
+
+  m_handoff.runAndWait([this, &e, &colls, token]()
   {
     edm::ServiceRegistry::Operate guard{token};
 
-    G4int evtid = static_cast<G4int>(e.id().event());
+    const G4int evtid = static_cast<G4int>(e.id().event());
     auto const& genEvent = e.get(mcToken_);
     auto g4evt = c4h::MCParticlesToG4(genEvent, evtid);
 
-    // Forward the converted EDM event into the Geant4 worker
-    evt = m_workerInterface->produce(g4evt.get());
+    // Call G4EventProcessor operator
+    colls = m_eventProcessor(*g4evt);
   });
 
-  // Note: Do post-processing of processed G4 events
+  // Move EDM4hep collections
+  putCollection(e, std::move(colls.calo), "CaloHitContributions");
+  putCollection(e, std::move(colls.trk), "SimTrackerHits");
 }
 
 // Method called when starting to processes a run
@@ -182,6 +200,15 @@ void G4SimProducer::endStream()
     edm::ServiceRegistry::Operate guard{token};
     m_workerInterface.reset();
   });
+}
+
+// Move a EDM4hep collection T into edm::Event under 'label'
+template <typename T>
+void G4SimProducer::putCollection(edm::Event& e, T&& coll,
+				  const std::string& label)
+{
+  using Collection = std::decay_t<T>;
+  e.put(std::make_unique<Collection>(std::move(coll)), label);
 }
 
 //define this as a plug-in

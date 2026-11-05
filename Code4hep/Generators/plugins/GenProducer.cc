@@ -14,6 +14,7 @@
 #include "Code4hep/Generators/Generator.h"
 #include "Code4hep/Generators/HepMC3Generator.h"
 #include "Code4hep/Generators/Pythia8Generator.h"
+#include "Code4hep/PodioUtilities/assigningProductTo.h"
 
 #include "CLHEP/Random/RandFlat.h"
 #include <edm4hep/MCParticleCollection.h>

@@ -28,7 +28,7 @@ public:
   ~G4WorkerInterface();
 
   // Process one G4 event using the worker run manager
-  G4Event* produce(G4Event* g4evt);
+  void produce(G4Event& g4evt);
 
   // Worker thread index assigned at construction
   inline int getThreadIndex() const { return threadIndex_; }
