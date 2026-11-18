@@ -12,6 +12,7 @@
 #include "FWCore/Utilities/interface/Exception.h"
 
 #include "Code4hep/Generators/Generator.h"
+#include "Code4hep/Generators/MCParticleGenerator.h"
 #include "Code4hep/Generators/HepMC3Generator.h"
 #include "Code4hep/Generators/Pythia8Generator.h"
 #include "Code4hep/PodioUtilities/assigningProductTo.h"
@@ -47,7 +48,11 @@ GenProducer::GenProducer(const ParameterSet& pset)
 {
   auto type = pset.getParameter<std::string>("generatorType");
 
-  if (type == "HepMC3Generator")
+  if (type == "MCParticleGenerator")
+  {
+    generator_ = std::make_unique<c4h::MCParticleGenerator>(pset);
+  }
+  else if (type == "HepMC3Generator")
   {
     generator_ = std::make_unique<c4h::HepMC3Generator>(pset);
   }
