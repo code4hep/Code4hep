@@ -5,6 +5,7 @@ c4h_add_library(
     DEPS
         FWCore/Framework
         FWCore/ParameterSet
+        FWCore/Sources
     EXT_DEPS
         CLHEP::CLHEP
         EDM4HEP::edm4hep
